@@ -42,3 +42,5 @@ type Helpers interface {
 type HelpersImpl struct {
 	API API
 }
+
+var _ Helpers = (*HelpersImpl)(nil)

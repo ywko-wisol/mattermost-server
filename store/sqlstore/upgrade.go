@@ -734,6 +734,8 @@ func upgradeDatabaseToVersion517(sqlStore SqlStore) {
 
 func upgradeDatabaseToVersion518(sqlStore SqlStore) {
 	if shouldPerformUpgrade(sqlStore, VERSION_5_17_0, VERSION_5_18_0) {
+		sqlStore.CreateColumnIfNotExists("GroupTeams", "SchemeAdmin", "boolean", "boolean", "0")
+		sqlStore.CreateColumnIfNotExists("GroupChannels", "SchemeAdmin", "boolean", "boolean", "0")
 		saveSchemaVersion(sqlStore, VERSION_5_18_0)
 	}
 }

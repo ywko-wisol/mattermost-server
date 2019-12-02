@@ -1164,3 +1164,32 @@ func (s *SqlGroupStore) CountChannelMembersMinusGroupMembers(channelID string, g
 
 	return count, nil
 }
+
+func (s *SqlGroupStore) GroupIDsGrantingTeamAdminRole(userID, teamID string) ([]string, *model.AppError) {
+	sql := `
+		SELECT
+			GroupId
+		FROM
+			GroupMembers
+		WHERE
+			UserId = :UserId
+			AND DeleteAt = 0
+		INTERSECT
+		SELECT
+			GroupId
+		FROM
+			GroupTeams
+		WHERE
+			TeamId = :TeamId
+			AND DeleteAt = 0
+			AND SchemeAdmin = TRUE`
+
+	var groupIds []string
+
+	_, err := s.GetReplica().Select(&groupIds, sql, map[string]interface{}{"UserId": userID, "TeamId": teamID})
+	if err != nil {
+		return nil, model.NewAppError("SqlGroupStore.GroupIDsGrantingTeamAdminRole", "store.select_error", nil, err.Error(), http.StatusInternalServerError)
+	}
+
+	return groupIds, nil
+}

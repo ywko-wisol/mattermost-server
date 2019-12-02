@@ -543,6 +543,14 @@ func (a *App) joinUserToTeam(team *model.Team, user *model.User) (*model.TeamMem
 		SchemeUser:  !user.IsGuest(),
 	}
 
+	if !user.IsGuest() && !user.IsInRole(model.SYSTEM_ADMIN_ROLE_ID) {
+		groupsAllowTeamAdmin, err := a.GroupTeamsAllowTeamAdminRole(user.Id, team.Id)
+		if err != nil {
+			return nil, false, err
+		}
+		tm.SchemeAdmin = groupsAllowTeamAdmin
+	}
+
 	if team.Email == user.Email {
 		tm.SchemeAdmin = true
 	}

@@ -245,3 +245,16 @@ func (a *App) ChannelMembersMinusGroupMembers(channelID string, groupIDs []strin
 	}
 	return users, totalCount, nil
 }
+
+func (a *App) GroupTeamsAllowTeamAdminRole(userID, teamID string) (bool, *model.AppError) {
+	groupIDs, err := a.Srv.Store.Group().GroupIDsGrantingTeamAdminRole(userID, teamID)
+	if err != nil {
+		return false, err
+	}
+
+	if len(groupIDs) == 0 {
+		return false, nil
+	}
+
+	return true, nil
+}

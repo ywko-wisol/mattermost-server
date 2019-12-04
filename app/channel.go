@@ -929,11 +929,11 @@ func (a *App) addUserToChannel(user *model.User, channel *model.Channel, teamMem
 	}
 
 	if !user.IsGuest() {
-		aGroupConfiguredForAdminRole, err := a.GroupSyncablesWithAdminRole(user.Id, channel.Id, model.GroupSyncableTypeChannel)
+		aGroupIsConfiguredForAdminRole, err := a.GroupSyncablesWithAdminRole(user.Id, channel.Id, model.GroupSyncableTypeChannel)
 		if err != nil {
 			return nil, err
 		}
-		newMember.SchemeAdmin = aGroupConfiguredForAdminRole
+		newMember.SchemeAdmin = aGroupIsConfiguredForAdminRole
 	}
 
 	if _, err = a.Srv.Store.Channel().SaveMember(newMember); err != nil {

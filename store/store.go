@@ -613,7 +613,9 @@ type GroupStore interface {
 	ChannelMembersMinusGroupMembers(channelID string, groupIDs []string, page, perPage int) ([]*model.UserWithGroups, *model.AppError)
 	CountChannelMembersMinusGroupMembers(channelID string, groupIDs []string) (int64, *model.AppError)
 
-	GroupIDsGrantingTeamAdminRole(userID, teamID string) ([]string, *model.AppError)
+	// GroupSyncablesWithAdminRole returns a list of IDs of groups that are configured to set members of the
+	// syncable (team or channel) as admins of that syncable.
+	GroupSyncablesWithAdminRole(userID, teamID string, syncableType model.GroupSyncableType) ([]string, *model.AppError)
 }
 
 type LinkMetadataStore interface {

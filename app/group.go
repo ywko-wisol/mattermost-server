@@ -246,8 +246,10 @@ func (a *App) ChannelMembersMinusGroupMembers(channelID string, groupIDs []strin
 	return users, totalCount, nil
 }
 
-func (a *App) GroupTeamsAllowTeamAdminRole(userID, teamID string) (bool, *model.AppError) {
-	groupIDs, err := a.Srv.Store.Group().GroupIDsGrantingTeamAdminRole(userID, teamID)
+// GroupSyncablesWithAdminRole returns true if one or more of the user's groups are configured to set the members as
+// admins in the given syncable (team or channel).
+func (a *App) GroupSyncablesWithAdminRole(userID, syncableID string, syncableType model.GroupSyncableType) (bool, *model.AppError) {
+	groupIDs, err := a.Srv.Store.Group().GroupSyncablesWithAdminRole(userID, syncableID, syncableType)
 	if err != nil {
 		return false, err
 	}

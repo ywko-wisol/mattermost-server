@@ -654,13 +654,13 @@ func (_m *GroupStore) GetMemberUsersPage(groupID string, page int, perPage int) 
 	return r0, r1
 }
 
-// GroupIDsGrantingTeamAdminRole provides a mock function with given fields: userID, teamID
-func (_m *GroupStore) GroupIDsGrantingTeamAdminRole(userID string, teamID string) ([]string, *model.AppError) {
-	ret := _m.Called(userID, teamID)
+// GroupSyncablesWithAdminRole provides a mock function with given fields: userID, teamID, syncableType
+func (_m *GroupStore) GroupSyncablesWithAdminRole(userID string, teamID string, syncableType model.GroupSyncableType) ([]string, *model.AppError) {
+	ret := _m.Called(userID, teamID, syncableType)
 
 	var r0 []string
-	if rf, ok := ret.Get(0).(func(string, string) []string); ok {
-		r0 = rf(userID, teamID)
+	if rf, ok := ret.Get(0).(func(string, string, model.GroupSyncableType) []string); ok {
+		r0 = rf(userID, teamID, syncableType)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]string)
@@ -668,8 +668,8 @@ func (_m *GroupStore) GroupIDsGrantingTeamAdminRole(userID string, teamID string
 	}
 
 	var r1 *model.AppError
-	if rf, ok := ret.Get(1).(func(string, string) *model.AppError); ok {
-		r1 = rf(userID, teamID)
+	if rf, ok := ret.Get(1).(func(string, string, model.GroupSyncableType) *model.AppError); ok {
+		r1 = rf(userID, teamID, syncableType)
 	} else {
 		if ret.Get(1) != nil {
 			r1 = ret.Get(1).(*model.AppError)

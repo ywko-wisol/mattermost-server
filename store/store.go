@@ -616,6 +616,8 @@ type GroupStore interface {
 	// GroupSyncablesWithAdminRole returns a list of IDs of groups that are configured to set members of the
 	// syncable (team or channel) as admins of that syncable.
 	GroupSyncablesWithAdminRole(userID, teamID string, syncableType model.GroupSyncableType) ([]string, *model.AppError)
+
+	PermittedSyncableAdmins(syncableID string, syncableType model.GroupSyncableType) ([]string, *model.AppError)
 }
 
 type LinkMetadataStore interface {

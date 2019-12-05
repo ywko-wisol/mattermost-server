@@ -695,6 +695,31 @@ func (_m *GroupStore) PermanentDeleteMembersByUser(userId string) *model.AppErro
 	return r0
 }
 
+// PermittedSyncableAdmins provides a mock function with given fields: syncableID, syncableType
+func (_m *GroupStore) PermittedSyncableAdmins(syncableID string, syncableType model.GroupSyncableType) ([]string, *model.AppError) {
+	ret := _m.Called(syncableID, syncableType)
+
+	var r0 []string
+	if rf, ok := ret.Get(0).(func(string, model.GroupSyncableType) []string); ok {
+		r0 = rf(syncableID, syncableType)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]string)
+		}
+	}
+
+	var r1 *model.AppError
+	if rf, ok := ret.Get(1).(func(string, model.GroupSyncableType) *model.AppError); ok {
+		r1 = rf(syncableID, syncableType)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*model.AppError)
+		}
+	}
+
+	return r0, r1
+}
+
 // TeamMembersMinusGroupMembers provides a mock function with given fields: teamID, groupIDs, page, perPage
 func (_m *GroupStore) TeamMembersMinusGroupMembers(teamID string, groupIDs []string, page int, perPage int) ([]*model.UserWithGroups, *model.AppError) {
 	ret := _m.Called(teamID, groupIDs, page, perPage)

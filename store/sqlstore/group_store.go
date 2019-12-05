@@ -1193,3 +1193,22 @@ func (s *SqlGroupStore) GroupSyncablesWithAdminRole(userID, syncableID string, s
 
 	return groupIds, nil
 }
+
+func (s *SqlGroupStore) PermittedSyncableAdmins(syncableID string, syncableType model.GroupSyncableType) ([]string, *model.AppError) {
+	query := s.getQueryBuilder().Select("GroupMembers.UserId").
+		From(fmt.Sprintf("Group%ss", syncableType)).
+		Join(fmt.Sprintf("GroupMembers ON GroupMembers.GroupId = Group%ss.GroupId", syncableType.String())).
+		Join(fmt.Sprintf("%[1]sMembers ON %[1]sMembers.%[1]sId = ? AND Group%[1]ss.SchemeAdmin = TRUE", syncableType), syncableID)
+
+	queryString, args, err := query.ToSql()
+	if err != nil {
+		return nil, model.NewAppError("SqlGroupStore.PermittedSyncableAdmins", "store.sql_group.app_error", nil, err.Error(), http.StatusInternalServerError)
+	}
+
+	var userIDs []string
+	if _, err = s.GetReplica().Select(&userIDs, queryString, args...); err != nil {
+		return nil, model.NewAppError("SqlGroupStore.PermittedSyncableAdmins", "store.select_error", nil, err.Error(), http.StatusInternalServerError)
+	}
+
+	return userIDs, nil
+}

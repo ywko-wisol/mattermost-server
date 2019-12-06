@@ -1194,11 +1194,11 @@ func (s *SqlGroupStore) GroupSyncablesWithAdminRole(userID, syncableID string, s
 	return groupIds, nil
 }
 
+// PermittedSyncableAdmins returns the IDs of all of the user who are permitted
 func (s *SqlGroupStore) PermittedSyncableAdmins(syncableID string, syncableType model.GroupSyncableType) ([]string, *model.AppError) {
-	query := s.getQueryBuilder().Select("GroupMembers.UserId").
+	query := s.getQueryBuilder().Select("UserId").
 		From(fmt.Sprintf("Group%ss", syncableType)).
-		Join(fmt.Sprintf("GroupMembers ON GroupMembers.GroupId = Group%ss.GroupId", syncableType.String())).
-		Join(fmt.Sprintf("%[1]sMembers ON %[1]sMembers.%[1]sId = ? AND Group%[1]ss.SchemeAdmin = TRUE", syncableType), syncableID)
+		Join(fmt.Sprintf("GroupMembers ON GroupMembers.GroupId = Group%ss.GroupId AND Group%[1]ss.SchemeAdmin = TRUE AND GroupMembers.DeleteAt = 0", syncableType.String()))
 
 	queryString, args, err := query.ToSql()
 	if err != nil {

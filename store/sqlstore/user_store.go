@@ -1141,6 +1141,20 @@ func (us SqlUserStore) GetUnreadCount(userId string) (int64, *model.AppError) {
 	return count, nil
 }
 
+// GetAnyUnreadPostCount returns the total number of unread messages for a user from all channels.
+func (us SqlUserStore) GetAnyUnreadPostCount(userId string) (int64, *model.AppError) {
+	query := `SELECT SUM(c.TotalMsgCount - cm.MsgCount)
+	FROM Channels c
+	INNER JOIN ChannelMembers cm
+		ON c.Id = cm.ChannelId AND cm.UserId = :UserId
+	`
+	count, err := us.GetReplica().SelectInt(query, map[string]interface{}{"UserId": userId})
+	if err != nil {
+		return count, model.NewAppError("SqlUserStore.GetAnyUnreadPostCount", "store.sql_user.get_unread_count_for_channel.app_error", nil, err.Error(), http.StatusInternalServerError)
+	}
+	return count, nil
+}
+
 func (us SqlUserStore) GetUnreadCountForChannel(userId string, channelId string) (int64, *model.AppError) {
 	count, err := us.GetReplica().SelectInt("SELECT SUM(CASE WHEN c.Type = 'D' THEN (c.TotalMsgCount - cm.MsgCount) ELSE cm.MentionCount END) FROM Channels c INNER JOIN ChannelMembers cm ON c.Id = cm.ChannelId AND cm.ChannelId = :ChannelId AND cm.UserId = :UserId", map[string]interface{}{"ChannelId": channelId, "UserId": userId})
 	if err != nil {

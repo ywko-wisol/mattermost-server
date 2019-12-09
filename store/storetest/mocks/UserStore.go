@@ -319,6 +319,29 @@ func (_m *UserStore) GetAllUsingAuthService(authService string) ([]*model.User, 
 	return r0, r1
 }
 
+// GetAnyUnreadPostCount provides a mock function with given fields: userId
+func (_m *UserStore) GetAnyUnreadPostCount(userId string) (int64, *model.AppError) {
+	ret := _m.Called(userId)
+
+	var r0 int64
+	if rf, ok := ret.Get(0).(func(string) int64); ok {
+		r0 = rf(userId)
+	} else {
+		r0 = ret.Get(0).(int64)
+	}
+
+	var r1 *model.AppError
+	if rf, ok := ret.Get(1).(func(string) *model.AppError); ok {
+		r1 = rf(userId)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).(*model.AppError)
+		}
+	}
+
+	return r0, r1
+}
+
 // GetAnyUnreadPostCountForChannel provides a mock function with given fields: userId, channelId
 func (_m *UserStore) GetAnyUnreadPostCountForChannel(userId string, channelId string) (int64, *model.AppError) {
 	ret := _m.Called(userId, channelId)

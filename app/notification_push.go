@@ -453,7 +453,7 @@ func (a *App) BuildPushNotificationMessage(contentsConfig string, post *model.Po
 		msg = a.buildFullPushNotificationMessage(contentsConfig, post, user, channel, channelName, senderName, explicitMention, channelWideMention, replyToThreadType)
 	}
 
-	badge, err := a.getPushNotificationBadge(user, channel)
+	badge, err := a.getPushNotificationBadge(user)
 	if err != nil {
 		return nil, err
 	}
@@ -520,12 +520,12 @@ func (a *App) buildFullPushNotificationMessage(contentsConfig string, post *mode
 	return msg
 }
 
-func (a *App) getPushNotificationBadge(user *model.User, channel *model.Channel) (int, *model.AppError) {
+func (a *App) getPushNotificationBadge(user *model.User) (int, *model.AppError) {
 	var unreadCount int64
 	var err *model.AppError
 
 	if user.NotifyProps["push"] == "all" {
-		unreadCount, err = a.Srv.Store.User().GetAnyUnreadPostCountForChannel(user.Id, channel.Id)
+		unreadCount, err = a.Srv.Store.User().GetAnyUnreadPostCount(user.Id)
 	} else {
 		unreadCount, err = a.Srv.Store.User().GetUnreadCount(user.Id)
 	}
